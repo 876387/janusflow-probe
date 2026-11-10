@@ -1,0 +1,17 @@
+[Unit]
+Description=JanusFlow Core Network 10G/40G Optical TAP / SPAN Mirror Probe (%i)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+EnvironmentFile=-/etc/janusflow/tap-%i.env
+ExecStartPre=/usr/local/bin/tune_10g_tap_nic.sh %i
+ExecStart=/usr/bin/python3 /usr/local/bin/janusflow-10g-tap-agent --iface %i --enforce-offload-off
+Restart=always
+RestartSec=3
+LimitNOFILE=1048576
+AmbientCapabilities=CAP_NET_RAW CAP_NET_ADMIN
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,58 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "janusflow-probe"
+version = "0.1.0"
+description = "JanusFlow Probe (雅努斯流 · janusflow.cn / JanusFlow.net / atooli.com): Zero-dependency Dual-Tower encrypted traffic identification CLI, FlowSketch v2 pre-extractor, and OpenWrt edge / 10G optical TAP probe kits"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "Apache-2.0"}
+authors = [
+  {name = "JanusFlow Security Team", email = "876387@gmail.com"}
+]
+keywords = [
+  "encrypted-traffic",
+  "traffic-classification",
+  "network-probe",
+  "openwrt",
+  "optical-tap",
+  "span",
+  "pcap",
+  "pcdn",
+  "tls-fingerprint"
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: Console",
+  "Intended Audience :: System Administrators",
+  "Intended Audience :: Telecommunications Industry",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: System :: Networking :: Monitoring",
+  "Topic :: Security"
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://www.atooli.com"
+Documentation = "https://www.atooli.com/#docs-traffic-cli"
+Repository = "https://github.com/876387/janusflow-probe"
+Issues = "https://github.com/876387/janusflow-probe/issues"
+
+[project.scripts]
+janusflow-probe = "janusflow_probe.cli:main"
+janusflow-sketch = "janusflow_probe.flowsketch:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

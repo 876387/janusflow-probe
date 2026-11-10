@@ -1,0 +1,33 @@
+name: CI Tests & Security Audit
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Offline unit, FlowSketch & desensitization tests
+        run: python -m unittest discover -s tests -v
+      - name: Verify CLI entrypoints & probe self-tests
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install -e .
+          janusflow-probe --version
+          janusflow-probe --help
+          janusflow-probe sketch --self-test
+          janusflow-probe probe-openwrt --self-test
+          janusflow-probe probe-10g-tap --self-test
+          sh -n probes/openwrt_edge/install_openwrt_probe.sh
+          bash -n probes/core_10g_tap/tune_10g_tap_nic.sh
