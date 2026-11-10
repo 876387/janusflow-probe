@@ -442,7 +442,7 @@ def main() -> None:
         prog="janusflow-probe",
         description=(
             "JanusFlow Probe (雅努斯流 · janusflow.cn / JanusFlow.net / atooli.com) — "
-            "Dual-Tower Encrypted Traffic Identification, PCDN Topology Scan & OpenWrt / 10G Optical TAP Probe CLI"
+            "Dual-Tower Encrypted Traffic Identification (399,756 Apps · 19 Categories · 17 SDKs · 5 PCDN Families · Two-Stage OOD Guard) & OpenWrt / 10G Optical TAP Probe CLI"
         ),
     )
     parser.add_argument("--version", action="version", version=f"janusflow-probe {__version__}")
@@ -480,7 +480,7 @@ def main() -> None:
 
     p_prof = sub.add_parser(
         "profile",
-        help="[Traffic Service] Identify encrypted app flows, 17-class SDKs & OOD gate status from PCAP or FlowSketch (.fsk.jsonl.gz)",
+        help="[Traffic Service] Identify encrypted app flows across 399,756 apps (19 categories), 17-class SDKs & OOD gate status from PCAP or FlowSketch (.fsk.jsonl.gz)",
     )
     p_prof.add_argument("input", help="Path to capture file (.pcap, .pcap.gz, .pcapng, .fsk.jsonl.gz)")
     p_prof.add_argument("--device-id", default="edge-probe-01", help="Logical probe / router identifier")
