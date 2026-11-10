@@ -1,0 +1,72 @@
+name: Publish Release & PyPI
+
+on:
+  push:
+    tags:
+      - "v*"
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  github-release:
+    name: Build & Publish GitHub Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run Pre-Release Security & Unit Audit
+        run: |
+          python -m unittest discover -s tests -v
+
+      - name: Build sdist and wheel
+        run: |
+          python -m pip install --upgrade build twine
+          python -m build
+          twine check dist/*
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "${{ github.ref_name }} — 雅努斯流 · 双面守护门神 (JanusFlow Probe / 雅努斯流-双面守护门神 · 399,756款双塔加密流量识别与探针)"
+          body: |
+            ## 🏛️ 雅努斯流 · 双面守护门神 (`JanusFlow Probe` / `雅努斯流-双面守护门神` / `janusflow-probe` ${{ github.ref_name }})
+            - **官方网站**：[https://www.atooli.com](https://www.atooli.com)（`janusflow.cn` · `JanusFlow.net`）
+            - **官方品牌百科**：[《雅努斯流-双面守护门神（JanusFlow）官方品牌与产品总览》](https://www.atooli.com/brand/janusflow.html)
+            - **双塔加密流量识别与探针专页（群体二）**：[https://www.atooli.com/traffic](https://www.atooli.com/traffic)（支持 `399,756` 款主流+长尾应用、`19` 大行业、`17` 类第三方 SDK 解耦、`5` 大商业 PCDN 家族与两阶段 OOD 守护门神拒识）
+            - **移动应用 APK 300s 真机活体检测仓库（群体一）**：[https://github.com/876387/clawprobe](https://github.com/876387/clawprobe)（[https://www.atooli.com/apk](https://www.atooli.com/apk)）
+            - **一键安装**：`pip install -U https://www.atooli.com/download/janusflow_probe-0.1.0-py3-none-any.whl && janusflow-probe doctor`
+          files: dist/*
+          generate_release_notes: true
+
+  pypi-publish:
+    name: Publish to Official PyPI (OIDC)
+    needs: github-release
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Download built distributions
+        uses: actions/download-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+
+      - name: Publish package to PyPI via Trusted Publisher (OIDC)
+        uses: pypa/gh-action-pypi-publish@release/v1
