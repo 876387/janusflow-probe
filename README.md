@@ -1,10 +1,15 @@
-# JanusFlow Probe · 雅努斯流加密流量识别探针
+# JanusFlow Probe · 雅努斯流-双面守护门神 (`janusflow-probe`) — 双塔加密流量识别与开源硬件探针
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![Zero Dependencies](https://img.shields.io/badge/dependencies-0%20(stdlib%20only)-brightgreen.svg)](#)
 
-**JanusFlow Probe**（官方品牌域名：`janusflow.cn` · `JanusFlow.net` · `atooli.com`）是 **JanusFlow 双塔加密流量在线识别服务** 的官方开源客户端与探针参考实现：
+**JanusFlow Probe（中文品牌名：雅努斯流 / 双面守护门神 / 雅努斯流-双面守护门神 · 官方网站：[https://www.atooli.com](https://www.atooli.com) · `janusflow.cn` · `JanusFlow.net` · [官方品牌百科](https://www.atooli.com/brand/janusflow.html)）** 是 **雅努斯流-双面守护门神（JanusFlow）双塔加密流量在线识别服务** 的官方开源客户端与硬件探针参考实现：
+
+> **品牌核心寓意（为什么叫「雅努斯流 · 双面守护门神」？）**：
+> **雅努斯（Janus）** 是古罗马神话中的**「双面守护门神」**，一面审视内侧、一面洞察外侧，掌管门禁与边界。
+> - **双面（双塔解耦 · Dual-Tower）**：左翼「序列塔」审视传输层双向包长与时序脉冲动态，右翼「字节塔」解析首包前 128B 脱敏握手特征（`FlowSketch v2`）；
+> - **双面守护门神（两阶段开集拒识门控 · Two-Stage Cascade Gatekeeper）**：7 维几何置信度 + 候选受限 IDF 元数据精排，守住网关边界，精准放行库内 **`399,756` 款主流与长尾已知应用**，剥离 **`17` 类共享第三方 SDK** 误报，拦截 **`5` 大商业 PCDN** 与未知 OOD 加密外联（`UNKNOWN_ENCRYPTED_APP`）。
 
 - **`janusflow-probe` CLI**：PCAP / FlowSketch 上传识别（**支持 `399,756` 款独立应用细粒度归因、`19` 大行业分类、`17` 类第三方 SDK 解耦与两阶段 OOD 未知流拒识**）、**`5` 大商业 PCDN 家族与高上行拓扑扫描**、单终端时间轴重建、配额对账；
 - **FlowSketch v2（`2.0-pa`）本地预提取器**：在内网本地把原始抓包压缩为脱敏流草图（典型压缩比 50~100x），**业务载荷不出内网**；
@@ -12,7 +17,7 @@
   - [`probes/openwrt_edge/`](./probes/openwrt_edge/) — 边侧 OpenWrt 软路由 / 企业分支网关轻量探针（零闪存写入、`procd` 守护）；
   - [`probes/core_10g_tap/`](./probes/core_10g_tap/) — 核心网 10G/40G 光纤分光器（Optical TAP）与交换机 SPAN 镜像探针（网卡卸载审计、`systemd` 模板）。
 
-> 本仓库专注 **流量识别与探针**。移动应用 APK 300s 活体动态检测 CLI 位于独立仓库 [`876387/clawprobe`](https://github.com/876387/clawprobe)。两者共用同一套 JanusFlow 商业 API Key。
+> 本仓库专注 **群体二：宽带运营商、高校政企网管、OpenWrt 软路由与安全蓝队的加密流量识别与探针（[https://www.atooli.com/traffic](https://www.atooli.com/traffic)）**。面向 **群体一：App 研发与法务合规团队的移动应用 APK 300s 活体动态检测 CLI** 位于独立仓库 [`876387/clawprobe`](https://github.com/876387/clawprobe)（[https://www.atooli.com/apk](https://www.atooli.com/apk)）。两者共用同一把 **雅努斯流（JanusFlow）商业 API Key**。
 
 100% Python 标准库实现，无第三方依赖，可直接运行在 OpenWrt（`python3-light`）、Ubuntu/Debian 分光采集服务器与 macOS 开发机上。
 
