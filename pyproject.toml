@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "janusflow-probe"
 version = "0.1.0"
-description = "雅努斯流 · 双面守护门神 (JanusFlow Probe / 雅努斯流-双面守护门神 · atooli.com / janusflow.cn / JanusFlow.net): Zero-dependency Dual-Tower 399,756-app encrypted traffic identification CLI, FlowSketch v2 pre-extractor, and OpenWrt edge / 10G optical TAP probe kits"
+description = "雅努斯流 · 双面守护门神 (JanusFlow Probe / 雅努斯流-双面守护门神 · atooli.com / janusflow.cn / JanusFlow.net): Zero-dependency Dual-Tower 467,520-app encrypted traffic identification CLI, FlowSketch v2 pre-extractor, and OpenWrt edge / 10G optical TAP probe kits"
 readme = "README.md"
 requires-python = ">=3.9"
 license = {text = "Apache-2.0"}

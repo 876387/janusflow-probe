@@ -11,7 +11,7 @@ flowchart LR
     A["LAN / PPPoE-WAN 接口<br/>(br-lan / pppoe-wan)"] -->|"仅截前 256B 包头<br/>(snaplen=256, 载荷直接丢弃)"| B["内存环形缓冲<br/>(/var/run/janusflow)"]
     B -->|"本地 FlowSketch v2 (2.0-pa)<br/>自适应 MSS + 100x 压缩"| C["脱敏流草图 (.fsk.jsonl.gz)<br/>(60秒仅 80~300 KB)"]
     C -->|"TLS 1.3 + HMAC-SHA256 v2<br/>SPKI 公钥指纹校验"| D["JanusFlow 双塔云端引擎<br/>(janusflow.cn / JanusFlow.net / atooli.com)"]
-    D --> E["输出：58,592 库内应用识别 +<br/>两阶段门神 OOD 拒识 +<br/>17类 SDK + PCDN 异常上行节点"]
+    D --> E["输出：467,520 库内应用识别 +<br/>两阶段门神 OOD 拒识 +<br/>17类 SDK + PCDN 异常上行节点"]
 ```
 
 1. **零闪存磨损（Zero Flash Wear）**：所有滚动抓包与流草图压缩均在 `/var/run/janusflow` 内存目录内完成，上传后立即 `unlink` 销毁，绝不写入路由器 SPI NAND / eMMC 闪存。

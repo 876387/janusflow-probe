@@ -12,7 +12,7 @@ flowchart LR
     B -->|"1. 硬件卸载锁死 (tso/gso/gro=off)<br/>2. 对称 RSS 哈希队列 + 4096 Ring"| C["内核 AF_PACKET 环形缓冲<br/>(仅截前 256B · 自动剥离 VLAN/QinQ/VXLAN)"]
     C -->|"本地 FlowSketch v2 (2.0-pa)<br/>自适应 TCP MSS 超大帧折叠 + 100x 压缩"| D["脱敏流草图 (.v2.fsk.jsonl.gz)<br/>(30秒窗口仅 0.8~3.5 MB)"]
     D -->|"TLS 1.3 + HMAC-SHA256 v2"| E["JanusFlow 双塔引擎<br/>(云端网关或本地私有化算力节点)"]
-    E --> F["输出：全网 58,592 库内应用画像 +<br/>两阶段门神 OOD 拒识 +<br/>PCDN /16 离散子网种子终端审计"]
+    E --> F["输出：全网 467,520 库内应用画像 +<br/>两阶段门神 OOD 拒识 +<br/>PCDN /16 离散子网种子终端审计"]
 ```
 
 ### 为什么核心网万兆分光必须配合 `tune_10g_tap_nic.sh` 与 `FlowSketch v2 (2.0-pa)`？
