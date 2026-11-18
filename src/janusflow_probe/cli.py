@@ -222,6 +222,9 @@ def _run_doctor(client: ClawNexusClient) -> int:
         checks["rtt_ms"] = rtt_ms
         checks["peer_spki_sha256"] = client.last_peer_spki_sha256
         checks["spki_pin_matched"] = client.last_spki_pin_matched
+        model_ver_hdr = hdrs.get("x-claw-model-version")
+        if model_ver_hdr:
+            checks["cloud_model_version"] = model_ver_hdr
         if st != 200:
             ok = False
         date_hdr = hdrs.get("date")
