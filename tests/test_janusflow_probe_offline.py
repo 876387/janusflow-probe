@@ -110,12 +110,53 @@ class TestJanusFlowProbeOffline(unittest.TestCase):
             self.assertIn('"status": "ok"', proc.stdout)
 
     def test_zero_internal_ip_or_secret_leakage(self):
-        forbidden_tokens = [
-            "192.168.", "122.224.", "218.75.", "112.124.", "172.30.",
-            "4060", "5000", "arm11", "cn_arm", "node11", "node_agent", "pool_manager",
-            "nftables", "xt_nflog", "nflog", "skuid", "tmpfs", "clawbox", "fs-net",
-            "byteetbert", "qwen", "redroid", "tnt_",
-        ]
+        forbidden_window_hashes = {
+            4: frozenset([
+                "f9a75ecb0e5e127ed6917a563840dd2a33d661d385f9808f0547d188883a01d1",
+                "0f8eb4b72b6e0c9e88b388eb967b49e067ef1004bf07bffc22c3acb13b43580a",
+                "67f2d22514622d1be30c14ee9f3cb104503a159a33a656ca91a1953aa9616429",
+                "1ab8b7f3160763c3ad6563287ef02a6022703117f43a94130f84c2e7ed3d367f",
+            ]),
+            5: frozenset([
+                "9d20b602fbe5b565409aa4e64553bf531d75dd30ba9d0fdc2440ddc07e16999f",
+                "064c28496762af7592c2d84e7acd32e95c8fdb2e09602e50a217b449201272d8",
+                "c392fb854c31498c87f44406813903470382477010f878554ee4a4edc8cc524f",
+                "02dae179e16841345a4e5cb7996e022ea6f45aeb4cbfa4811a76934328c2d24e",
+            ]),
+            6: frozenset([
+                "c7496688a99973b04fee89173591f09cd1d650bd9def3a3a47ae36edbd277522",
+                "2cb5049d289d9b03fbe6383613d680969fef82c092e583e80c258b3eb7024399",
+                "c9e0a40ab5458b21622c05c24068a1bcd94642f86814729b9f3796590abfcc55",
+            ]),
+            7: frozenset([
+                "a35906a5b5e2d3b78bd2513a9fbb4965726f949cd6220648984deb8bd86fda62",
+                "6dbe9d04efa48bf698d72c1df6829e3c7837219a7869a35f91cc74c5b195052b",
+                "538dcececb7751af5f51e2203591efc1d48cc586bbd9c991bb67c5b99fbc863b",
+                "badc57e9a107c1e794a910fabdc6b80b22897525ef735cedf15748e0cef975d7",
+            ]),
+            8: frozenset([
+                "89717ddba1be520eed9b14a8bacfa507b79608b04b7e1b1360a18183cdab4c1d",
+                "faa8690ae801ec25cc668357e6e1e441916e7b4df54abd236f33b219f65316a8",
+                "f31006e706fcc58856f733c46fbe7c9618908e7ae476fa3fe47ab58413503957",
+                "c7ecb245374fc418d6290e8a67dad19032efd73f8f9a77b9ddacfa24b1d4b7af",
+                "ac8cc19bba56cb1b39e99cb78ef1ddd38ea7b6e22a7996c9d06538dc2bb98650",
+                "cfe01afd94ec594ce78ee7450f526145d1f83f5d798081b0ab9d1f5a8f93097e",
+            ]),
+            10: frozenset([
+                "071366614492cac29cf0a56532f028a52942ee837b0394e1345efe11bec563ff",
+                "90af2fc6d00f38600e023fc3cce599d6724edc949201dd07912231ddfa6c3540",
+            ]),
+            11: frozenset([
+                "9a139a5d99d45485d6eb802214d7d748d99325092f82da93f0afdc8a4ca0901c",
+            ]),
+            12: frozenset([
+                "c309821f889a0a17198e1ea6abc37846434581fe28523f43806191ffe88e96fd",
+            ]),
+            16: frozenset([
+                "667ecbd06bb0e06021f89ecf77222cadb715fdc8835abdb02d9b20dec8fc3af9",
+                "d503ca33bbd2114fcb130424e398afa3d81a37c89dfc08480333cd8230b5aa4b",
+            ]),
+        }
         patterns = ("*.py", "*.md", "*.sh", "*.init", "*.service", "*.toml", "*.yml")
         scan_targets = []
         for pat in patterns:
@@ -123,8 +164,24 @@ class TestJanusFlowProbeOffline(unittest.TestCase):
         self.assertGreater(len(scan_targets), 10)
         for path in scan_targets:
             content = path.read_text(encoding="utf-8").lower()
-            for token in forbidden_tokens:
-                self.assertNotIn(token.lower(), content, f"Forbidden internal token {token!r} found in {path}")
+            n_chars = len(content)
+            for win_len, target_hashes in forbidden_window_hashes.items():
+                if n_chars < win_len:
+                    continue
+                unique_windows = {
+                    content[i : i + win_len]
+                    for i in range(n_chars - win_len + 1)
+                    if ("0" <= content[i] <= "9") or ("a" <= content[i] <= "z")
+                }
+                for sub in unique_windows:
+                    if not sub.isascii():
+                        continue
+                    digest = hashlib.sha256(sub.encode("utf-8")).hexdigest()
+                    self.assertNotIn(
+                        digest,
+                        target_hashes,
+                        f"Forbidden internal token hash {digest[:12]}... matched in {path}",
+                    )
 
 
 if __name__ == "__main__":
